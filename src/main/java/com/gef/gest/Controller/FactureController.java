@@ -29,6 +29,7 @@ public class FactureController {
     public ResponseEntity<Facture> getFacture(@PathVariable Long id) {
         return ResponseEntity.ok(factureService.getFactureById(id));
     }
+
     @GetMapping
     public List<Facture> getFactures() {
         return ResponseEntity.ok(factureService.list()).getBody();
