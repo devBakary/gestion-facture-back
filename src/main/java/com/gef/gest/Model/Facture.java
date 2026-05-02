@@ -31,6 +31,10 @@ public class Facture {
 
     private double total;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @OneToMany(mappedBy = "facture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LigneFacture> lignes;
 

@@ -2,10 +2,13 @@ package com.gef.gest.ServiceImplement;
 
 import com.gef.gest.Model.Facture;
 import com.gef.gest.Model.LigneFacture;
+import com.gef.gest.Model.User;
 import com.gef.gest.Repository.FactureRepo;
+import com.gef.gest.Repository.UserRepository;
 import com.gef.gest.Service.FactureService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,9 +20,17 @@ import java.util.Optional;
 @AllArgsConstructor
 public class FactureServiceImplement implements FactureService {
     private final FactureRepo factureRepository;
+    private UserRepository userRepository;
 
     @Override
-    public Facture saveFacture(Facture facture) {
+    public Facture saveFacture(Facture facture, Authentication auth) {
+
+        String username = auth.getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow();
+
+        facture.setUser(user);
 
         // 🔥 lien parent -> enfants
         if (facture.getLignes() != null) {
