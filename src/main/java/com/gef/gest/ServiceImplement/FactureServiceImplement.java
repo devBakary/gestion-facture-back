@@ -8,6 +8,7 @@ import com.gef.gest.Repository.UserRepository;
 import com.gef.gest.Service.FactureService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class FactureServiceImplement implements FactureService {
-    private final FactureRepo factureRepository;
+
+    @Autowired
+    private FactureRepo factureRepository;
+
+    // 🔥 CONSTRUCTEUR
+    public FactureServiceImplement(FactureRepo factureRepository) {
+        this.factureRepository = factureRepository;
+    }
+    @Autowired
     private UserRepository userRepository;
 
     @Override
@@ -82,5 +90,10 @@ public class FactureServiceImplement implements FactureService {
     @Override
     public Facture getFactureById(Long id) {
         return factureRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void delete(Long id) {
+        factureRepository.deleteById(id);
     }
 }

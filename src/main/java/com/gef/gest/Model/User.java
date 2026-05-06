@@ -25,4 +25,15 @@ public class User {
 
     private String role; // ADMIN, USER
 
+//pour le compte entreprise
+    private String name;
+
+    private String adresse;
+
+    private String numero;
+
+    private String description;
+
+    private String domaine;
+
 }

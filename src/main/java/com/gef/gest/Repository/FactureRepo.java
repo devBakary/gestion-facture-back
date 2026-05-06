@@ -11,4 +11,5 @@ public interface FactureRepo extends JpaRepository<Facture, Long> {
 
     List<Facture> findByUser(User user);
     Optional<Facture> findTopByOrderByIdDesc();
+
 }

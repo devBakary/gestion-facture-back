@@ -17,6 +17,7 @@ import java.util.List;
 @CrossOrigin("*")
 public class FactureController {
 
+    @Autowired
     private final FactureService factureService;
 
     @Autowired
@@ -34,7 +35,7 @@ public class FactureController {
     public ResponseEntity<Facture> createFacture(@RequestBody Facture facture, Authentication auth) {
 
 
-
+        System.out.println("USER: " + auth);
 
         return ResponseEntity.ok(factureService.saveFacture(facture, auth));
     }
@@ -45,10 +46,10 @@ public class FactureController {
         return ResponseEntity.ok(factureService.getFactureById(id));
     }
 
-   // @GetMapping
-    //public List<Facture> getFactures() {
-    //    return ResponseEntity.ok(factureService.list()).getBody();
-    //}
+    @GetMapping("/getAll")
+    public List<Facture> getFactures() {
+        return ResponseEntity.ok(factureService.list()).getBody();
+    }
 
     @GetMapping
     public List<Facture> getMyFactures(Authentication auth) {
@@ -59,5 +60,10 @@ public class FactureController {
                 .orElseThrow();
 
         return factureRepo.findByUser(user);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        factureService.delete(id);
+        return ResponseEntity.ok("Facture supprimée");
     }
 }

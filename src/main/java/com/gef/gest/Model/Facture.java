@@ -39,4 +39,23 @@ public class Facture {
     private List<LigneFacture> lignes;
 
     // getters et setters
+    // 🔥 getters setters
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getNumeroFacture() { return numeroFacture; }
+    public void setNumeroFacture(String numeroFacture) { this.numeroFacture = numeroFacture; }
+
+    public double getTotal() { return total; }
+    public void setTotal(double total) { this.total = total; }
+
+    public LocalDate getDateFacture() { return dateFacture; }
+    public void setDateFacture(LocalDate dateFacture) { this.dateFacture = dateFacture; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
+    public List<LigneFacture> getLignes() { return lignes; }
+    public void setLignes(List<LigneFacture> lignes) { this.lignes = lignes; }
 }
