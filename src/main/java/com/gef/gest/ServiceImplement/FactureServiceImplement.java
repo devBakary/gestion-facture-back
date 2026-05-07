@@ -96,4 +96,9 @@ public class FactureServiceImplement implements FactureService {
     public void delete(Long id) {
         factureRepository.deleteById(id);
     }
+
+    @Override
+    public void deleteMultiple(List<Long> ids) {
+        factureRepository.deleteAllById(ids);
+    }
 }

@@ -14,4 +14,6 @@ public interface FactureService {
     Facture getFactureById(Long id);
 
     void delete(Long id);
+
+    void deleteMultiple(List<Long> ids);
 }

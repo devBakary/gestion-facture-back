@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/factures")
@@ -30,7 +31,7 @@ public class FactureController {
         this.factureService = factureService;
     }
 
-    // 📌 créer une facture
+    // créer une facture
     @PostMapping
     public ResponseEntity<Facture> createFacture(@RequestBody Facture facture, Authentication auth) {
 
@@ -40,7 +41,7 @@ public class FactureController {
         return ResponseEntity.ok(factureService.saveFacture(facture, auth));
     }
 
-    // 📌 récupérer une facture
+    // récupérer une facture
     @GetMapping("/{id}")
     public ResponseEntity<Facture> getFacture(@PathVariable Long id) {
         return ResponseEntity.ok(factureService.getFactureById(id));
@@ -64,6 +65,19 @@ public class FactureController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         factureService.delete(id);
-        return ResponseEntity.ok("Facture supprimée");
+        return ResponseEntity.ok().body(Map.of(
+                "message", "Facture supprimée"
+        ));
+    }
+
+    @DeleteMapping("/delete-multiple")
+    public ResponseEntity<?> deleteMultiple(@RequestBody List<Long> ids) {
+
+        factureService.deleteMultiple(ids);
+
+        return ResponseEntity.ok().body(Map.of(
+                "success", true,
+                "message", "Factures supprimées"
+        ));
     }
 }
