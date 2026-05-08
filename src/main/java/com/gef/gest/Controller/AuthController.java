@@ -19,20 +19,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
-@AllArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authManager;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UserRepository userRepository;
-
+    private final AuthenticationManager authManager;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    public AuthController(PasswordEncoder passwordEncoder) {
+
+    public AuthController(
+            AuthenticationManager authManager,
+            JwtService jwtService,
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder
+    ) {
+        this.authManager = authManager;
+        this.jwtService = jwtService;
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
