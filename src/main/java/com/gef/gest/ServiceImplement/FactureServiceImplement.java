@@ -62,8 +62,20 @@ public class FactureServiceImplement implements FactureService {
 
         // numéro automatique
         facture.setNumeroFacture(generateNumeroFacture());
+        facture.setStatut("PAYER");
 
         return factureRepository.save(facture);
+    }
+
+    @Override
+    public void updateStatut(Long id, String statut) {
+
+        Facture facture = factureRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Facture introuvable"));
+
+        facture.setStatut(statut);
+
+        factureRepository.save(facture);
     }
 
     @Override

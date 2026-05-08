@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -31,6 +32,9 @@ public class AuthController {
     private UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+    public AuthController(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User request) {
@@ -81,6 +85,21 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return userRepository.save(user);
+    }
+    @PutMapping("/me")
+    public User updateMyProfile(Principal principal,
+                                @RequestBody User user) {
+
+        User existing = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        existing.setName(user.getName());
+        existing.setDomaine(user.getDomaine());
+        existing.setAdresse(user.getAdresse());
+        existing.setDescription(user.getDescription());
+        existing.setNumero(user.getNumero());
+
+        return userRepository.save(existing);
     }
     //recup user
      @GetMapping("/user")

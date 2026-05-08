@@ -26,6 +26,7 @@ public class Facture {
     private String nomClient;
     private String telephone;
     private String adresse;
+    private String statut;
 
     private LocalDate dateFacture;
 
@@ -58,4 +59,12 @@ public class Facture {
 
     public List<LigneFacture> getLignes() { return lignes; }
     public void setLignes(List<LigneFacture> lignes) { this.lignes = lignes; }
+
+    public String getStatut() {
+        return statut;
+    }
+
+    public void setStatut(String statut) {
+        this.statut = statut;
+    }
 }

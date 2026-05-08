@@ -9,6 +9,8 @@ public interface FactureService {
 
     Facture saveFacture(Facture facture, Authentication auth);
 
+    void updateStatut(Long id, String statut);
+
     List<Facture> list();
 
     Facture getFactureById(Long id);

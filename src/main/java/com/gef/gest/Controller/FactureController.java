@@ -35,9 +35,6 @@ public class FactureController {
     @PostMapping
     public ResponseEntity<Facture> createFacture(@RequestBody Facture facture, Authentication auth) {
 
-
-        System.out.println("USER: " + auth);
-
         return ResponseEntity.ok(factureService.saveFacture(facture, auth));
     }
 
@@ -61,6 +58,19 @@ public class FactureController {
                 .orElseThrow();
 
         return factureRepo.findByUser(user);
+    }
+    @PutMapping("/{id}/statut")
+    public ResponseEntity<?> updateStatut(
+            @PathVariable Long id,
+            @RequestParam String statut
+    ) {
+
+        factureService.updateStatut(id, statut);
+
+        return ResponseEntity.ok().body(Map.of(
+                "success", true,
+                "message", "Statut mis à jour"
+        ));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
