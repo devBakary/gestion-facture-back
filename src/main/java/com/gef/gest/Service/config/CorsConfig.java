@@ -19,7 +19,7 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(
-                List.of("http://localhost:4200")
+                List.of("http://localhost:4200","https://gest-facture.netlify.app" )
         );
 
         configuration.setAllowedMethods(
