@@ -38,6 +38,17 @@ public class FactureController {
         return ResponseEntity.ok(factureService.saveFacture(facture, auth));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Facture> updateFacture(
+            @PathVariable Long id,
+            @RequestBody Facture facture
+    ) {
+
+        return ResponseEntity.ok(
+                factureService.update(id, facture)
+        );
+    }
+
     // récupérer une facture
     @GetMapping("/{id}")
     public ResponseEntity<Facture> getFacture(@PathVariable Long id) {

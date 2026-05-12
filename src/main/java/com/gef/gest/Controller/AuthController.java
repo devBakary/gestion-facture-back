@@ -14,29 +14,27 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
+@AllArgsConstructor
 public class AuthController {
 
-    private final AuthenticationManager authManager;
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager authManager;
 
-    public AuthController(
-            AuthenticationManager authManager,
-            JwtService jwtService,
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder
-    ) {
-        this.authManager = authManager;
-        this.jwtService = jwtService;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User request) {
@@ -103,6 +101,79 @@ public class AuthController {
 
         return userRepository.save(existing);
     }
+
+    //modification du password
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(
+            Principal principal,
+            @RequestBody Map<String, String> body
+    ) {
+
+        String oldPassword = body.get("oldPassword");
+        String newPassword = body.get("newPassword");
+
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        // vérifier ancien mot de passe
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of("message", "Ancien mot de passe incorrect")
+            );
+        }
+
+        // encoder nouveau mot de passe
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok(
+                Map.of("message", "Mot de passe modifié avec succès")
+        );
+    }
+
+    //reinitialiser le mot de passe
+    @PutMapping("/admin/reset-password/{id}")
+    public ResponseEntity<?> resetPassword(@PathVariable Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        String defaultPassword = user.getUsername() + "@2026";
+
+        user.setPassword(passwordEncoder.encode(defaultPassword));
+
+        user.setResetRequested(false);
+        System.out.println(defaultPassword);
+        userRepository.save(user);
+
+        return ResponseEntity.ok().body(
+                Map.of(
+                        "success", true,
+                        "newPassword", defaultPassword
+                )
+        );
+    }
+    //demande de reinialisation
+    @PutMapping("/request-reset")
+    public ResponseEntity<?> requestReset(@RequestParam String username) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        user.setResetRequested(true);
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok().body(
+                Map.of(
+                        "success", true,
+                        "message", "Demande envoyée à l'administrateur"
+                )
+        );
+    }
+
     //recup user
      @GetMapping("/user")
     public List<User> getUser() {

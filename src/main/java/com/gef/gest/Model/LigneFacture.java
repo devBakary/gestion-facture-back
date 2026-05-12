@@ -61,13 +61,14 @@ public class LigneFacture {
         this.quantite = quantite;
     }
 
+    public void setPrixUnitaire(double prixUnitaire) {
+        this.prixUnitaire = prixUnitaire;
+    }
     public double getPrixUnitaire() {
         return prixUnitaire;
     }
 
-    public void setPrix(double prix) {
-        this.prixUnitaire = prixUnitaire;
-    }
+
 
     public Facture getFacture() {
         return facture;

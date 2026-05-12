@@ -68,6 +68,59 @@ public class FactureServiceImplement implements FactureService {
     }
 
     @Override
+    public Facture update(Long id, Facture facture) {
+
+        Facture fact = factureRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Facture introuvable"));
+
+        if (facture.getNomClient() != null) {
+            fact.setNomClient(facture.getNomClient());
+        }
+
+        if (facture.getAdresse() != null) {
+            fact.setAdresse(facture.getAdresse());
+        }
+
+        if (facture.getTelephone() != null) {
+            fact.setTelephone(facture.getTelephone());
+        }
+
+        // 🔥 FIX IMPORTANT
+        if (facture.getLignes() == null) {
+            facture.setLignes(List.of());
+        }
+
+        // UPDATE LIGNES
+        for (LigneFacture newLigne : facture.getLignes()) {
+
+            if (newLigne.getId() != null) {
+
+                for (LigneFacture oldLigne : fact.getLignes()) {
+
+                    if (oldLigne.getId().equals(newLigne.getId())) {
+
+                        oldLigne.setDescription(newLigne.getDescription());
+                        oldLigne.setQuantite(newLigne.getQuantite());
+                        oldLigne.setPrixUnitaire(newLigne.getPrixUnitaire());
+                    }
+                }
+
+            } else {
+                newLigne.setFacture(fact);
+                fact.getLignes().add(newLigne);
+            }
+        }
+
+        fact.setTotal(
+                fact.getLignes().stream()
+                        .mapToDouble(LigneFacture::getTotal)
+                        .sum()
+        );
+
+        return factureRepository.save(fact);
+    }
+
+    @Override
     public void updateStatut(Long id, String statut) {
 
         Facture facture = factureRepository.findById(id)
