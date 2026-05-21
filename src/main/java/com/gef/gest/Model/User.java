@@ -112,4 +112,12 @@ public class User {
         this.numero = numero;
     }
 
+    public boolean isResetRequested() {
+        return resetRequested;
+    }
+
+    public void setResetRequested(boolean resetRequested) {
+        this.resetRequested = resetRequested;
+    }
+
 }
