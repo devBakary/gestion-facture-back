@@ -38,21 +38,51 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User request) {
 
-        authManager.authenticate(
+        System.out.println("========== LOGIN START ==========");
+        System.out.println("Username reçu : " + request.getUsername());
 
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
+        try {
 
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow();
+            System.out.println("Avant authenticate");
 
-        String token = jwtService.generateToken(request.getUsername(), request.getRole());
+            authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
 
+            System.out.println("Après authenticate");
 
-        return ResponseEntity.ok(new AuthResponse(token));
+            User user = userRepository.findByUsername(request.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+            System.out.println("Utilisateur trouvé : " + user.getUsername());
+
+            String token = jwtService.generateToken(
+                    user.getUsername(),
+                    user.getRole()
+            );
+
+            System.out.println("Token généré");
+
+            System.out.println("========== LOGIN SUCCESS ==========");
+
+            return ResponseEntity.ok(new AuthResponse(token));
+
+        } catch (Exception e) {
+
+            System.out.println("========== LOGIN ERROR ==========");
+            System.out.println(e.getMessage());
+
+            e.printStackTrace();
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "error", e.getMessage()
+                    )
+            );
+        }
     }
 
     @GetMapping("/me")
