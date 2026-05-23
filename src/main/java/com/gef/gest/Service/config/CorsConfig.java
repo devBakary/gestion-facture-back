@@ -39,7 +39,7 @@ public class CorsConfig {
                 List.of("*")
         );
 
-        configuration.setAllowCredentials(false);
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
