@@ -71,7 +71,7 @@ public class FactureServiceImplement implements FactureService {
     public Facture update(Long id, Facture facture) {
 
         Facture fact = factureRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Facture introuvable"));
+                .orElseThrow(() -> new RuntimeException("Factures introuvables"));
 
         if (facture.getNomClient() != null) {
             fact.setNomClient(facture.getNomClient());
